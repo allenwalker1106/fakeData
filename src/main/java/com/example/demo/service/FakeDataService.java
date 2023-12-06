@@ -4,4 +4,6 @@ import java.util.List;
 
 public interface FakeDataService {
     void createDir(String path);
+
+    String getDataPath();
 }

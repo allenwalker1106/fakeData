@@ -40,9 +40,9 @@ public class FakeDataController {
         throw new IOException("Data Not Exist"+path);
     }
 
-    public static String buildPath(String type, String id){
+    public  String buildPath(String type, String id){
         if(Objects.nonNull(type) && Objects.nonNull(id)){
-            return "./fake/data/"+type+"/"+id;
+            return fakeDataService.getDataPath()+type+"/"+id;
         }
         return null;
     }
@@ -117,6 +117,7 @@ public class FakeDataController {
 
     @PostMapping("/add")
     public Object createSampleData(@RequestParam String group, @RequestParam String name, @RequestBody Object data){
+        String content = "Create Data Fail";
         if(Objects.nonNull(group) && Objects.nonNull(name)){
             if(!this.groupExists(group)){
                 if(!group.isBlank()){
@@ -125,14 +126,13 @@ public class FakeDataController {
                     return "";
                 }
             }
-            String filePath = "./fake/data/"+group+"/"+name;
-            String content = "";
+            String filePath = fakeDataService.getDataPath()+group+"/"+name;
             if(Objects.nonNull(data)){
                 content = data.toString();
             }
             this.writeContent(filePath,content);
         }
-        return data;
+        return content;
     }
 
     private void writeContent(String filePath, String Content){
@@ -153,12 +153,12 @@ public class FakeDataController {
     private boolean groupExists(String group) {
         boolean exists = false;
         if(Objects.nonNull(group) && !group.isBlank()){
-            String dataPath = "./fake/data";
+            String dataPath = fakeDataService.getDataPath();
             File fileData = new File(dataPath);
             if(!fileData.exists()){
                 fileData.mkdirs();
             }
-            String groupPath = "./fake/data/"+group;
+            String groupPath = fakeDataService.getDataPath()+group;
 
             File groupDir = new File(groupPath);
             exists = groupDir.exists();

@@ -17,19 +17,20 @@ import java.util.Objects;
 @Service
 public class FakeDataServiceImpl implements FakeDataService {
 
-    final String resourcePath = "fake/data";
     @Override
     public void createDir(String group) {
+        boolean success = false;
         if(Objects.nonNull(group)){
-            String path = "./fake/data/"+group;
+            String path = this.getDataPath()+group;
             File groupDir = new File(path);
             if (!groupDir.exists()) {
-                groupDir.mkdirs();
+                success = groupDir.mkdirs();
             }
         }
     }
 
-    private String getDataFolderPath(){
-        return "./fake/".concat(this.resourcePath);
+    @Override
+    public String getDataPath() {
+        return getClass().getClassLoader().getResource(".").getPath() + "fake/data/";
     }
 }

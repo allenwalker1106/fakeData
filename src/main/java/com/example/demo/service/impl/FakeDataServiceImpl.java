@@ -21,19 +21,15 @@ public class FakeDataServiceImpl implements FakeDataService {
     @Override
     public void createDir(String group) {
         if(Objects.nonNull(group)){
-            try{
-                String path = new ClassPathResource(".").getFile().getPath()+"/data/"+group;
-                File groupDir = new File(path);
-                if (!groupDir.exists()) {
-                    groupDir.mkdirs();
-                }
-            }catch(IOException e){
-                e.printStackTrace();
+            String path = "./fake/data/"+group;
+            File groupDir = new File(path);
+            if (!groupDir.exists()) {
+                groupDir.mkdirs();
             }
         }
     }
 
     private String getDataFolderPath(){
-        return "classpath:".concat(this.resourcePath);
+        return "./fake/".concat(this.resourcePath);
     }
 }

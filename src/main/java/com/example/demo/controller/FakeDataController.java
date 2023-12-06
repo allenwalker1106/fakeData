@@ -27,20 +27,22 @@ public class FakeDataController {
     private FakeDataService fakeDataService;
 
 
-    public static String asString(Resource resource) throws Exception{
-        Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8);
+    public static String asString(File resource) throws Exception{
+        Reader reader = new InputStreamReader(new FileInputStream(resource), StandardCharsets.UTF_8);
         return FileCopyUtils.copyToString(reader);
 
     }
     public static String readFileToString(String path) throws Exception{
-        ResourceLoader resourceLoader = new DefaultResourceLoader();
-        Resource resource = resourceLoader.getResource(path);
-        return asString(resource);
+        File file = new File(path);
+        if(file.exists()){
+            return asString(file);
+        }
+        throw new IOException("Data Not Exist"+path);
     }
 
     public static String buildPath(String type, String id){
         if(Objects.nonNull(type) && Objects.nonNull(id)){
-            return "classpath:data/"+type+"/"+id;
+            return "./fake/data/"+type+"/"+id;
         }
         return null;
     }
@@ -123,7 +125,7 @@ public class FakeDataController {
                     return "";
                 }
             }
-            String filePath = "classpath:data/"+group+"/"+name;
+            String filePath = "./fake/data/"+group+"/"+name;
             String content = "";
             if(Objects.nonNull(data)){
                 content = data.toString();
@@ -135,9 +137,7 @@ public class FakeDataController {
 
     private void writeContent(String filePath, String Content){
         try {
-            String rootPath = new ClassPathResource(".").getFile().getPath()+"/";
-            String convertPath = filePath.replace("classpath:",rootPath);
-            File targetFile = new File(convertPath);
+            File targetFile = new File(filePath);
             if(!targetFile.exists()){
                 targetFile.createNewFile();
             }
@@ -153,19 +153,15 @@ public class FakeDataController {
     private boolean groupExists(String group) {
         boolean exists = false;
         if(Objects.nonNull(group) && !group.isBlank()){
-            String path = "classpath:data";
-            ResourceLoader resourceLoader = new DefaultResourceLoader();
-            Resource resource = resourceLoader.getResource(path);
-            try{
-                File dataDir = resource.getFile();
-                String[] dirContent = dataDir.list();
-                if(Objects.nonNull(dirContent)){
-                    List<String> folderContent =  Arrays.asList(dirContent);
-                    exists = folderContent.stream().anyMatch(file -> file.equals(group));
-                }
-            }catch(Exception e){
-                e.printStackTrace();
+            String dataPath = "./fake/data";
+            File fileData = new File(dataPath);
+            if(!fileData.exists()){
+                fileData.mkdirs();
             }
+            String groupPath = "./fake/data/"+group;
+
+            File groupDir = new File(groupPath);
+            exists = groupDir.exists();
         }
         return exists;
     }

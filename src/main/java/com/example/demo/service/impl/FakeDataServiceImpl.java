@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.service.FakeDataService;
+import com.google.gson.Gson;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class FakeDataServiceImpl implements FakeDataService {
 
     @Override
     public void addData(String group, String name, Object data) {
+        Gson gson = new Gson();
         if(Objects.nonNull(group) && !group.isBlank() && Objects.nonNull(name) && !name.isBlank() && Objects.nonNull(data)){
             if(Objects.isNull(this.dataStore)){
                 this.dataStore = new HashMap<>();
@@ -44,7 +46,12 @@ public class FakeDataServiceImpl implements FakeDataService {
             if(!this.dataStore.containsKey(group)){
                 this.dataStore.put(group, new HashMap<>());
             }
-            String content = data.toString();
+            String content = "";
+            try{
+                content = gson.toJson(data);
+            }catch(Exception e){
+                content = data.toString();
+            }
             this.dataStore.get(group).put(name,content);
         }
 

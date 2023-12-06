@@ -26,39 +26,13 @@ public class FakeDataController {
     @Autowired
     private FakeDataService fakeDataService;
 
-
-    public static String asString(File resource) throws Exception{
-        Reader reader = new InputStreamReader(new FileInputStream(resource), StandardCharsets.UTF_8);
-        return FileCopyUtils.copyToString(reader);
-
-    }
-    public static String readFileToString(String path) throws Exception{
-        File file = new File(path);
-        if(file.exists()){
-            return asString(file);
-        }
-        throw new IOException("Data Not Exist"+path);
-    }
-
-    public  String buildPath(String type, String id){
-        if(Objects.nonNull(type) && Objects.nonNull(id)){
-            return fakeDataService.getDataPath()+type+"/"+id;
-        }
-        return null;
-    }
-
     @GetMapping("/data/{group}/{id}")
     public Object getFakeData(@PathVariable("group") String group, @PathVariable("id") String id){
         Gson gson = new Gson();
         if(Objects.nonNull(group) && Objects.nonNull(id)){
-            String resourcePath = buildPath(group,id);
-            if(Objects.nonNull(resourcePath)){
-                try{
-                    String content = readFileToString(resourcePath);
-                    return gson.fromJson(content,Object.class);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
+            String content = fakeDataService.getData(group,id);
+            if(Objects.nonNull(content)){
+                return gson.fromJson(content,Object.class);
             }
         }
         return gson.fromJson("{}",Object.class);
@@ -68,14 +42,9 @@ public class FakeDataController {
     public Object getSampleData(@RequestParam("group") String group, @RequestParam("id") String id){
         Gson gson = new Gson();
         if(Objects.nonNull(group) && Objects.nonNull(id)){
-            String resourcePath = buildPath(group,id);
-            if(Objects.nonNull(resourcePath)){
-                try{
-                    String content = readFileToString(resourcePath);
-                    return gson.fromJson(content,Object.class);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
+            String content = fakeDataService.getData(group,id);
+            if(Objects.nonNull(content)){
+                return gson.fromJson(content,Object.class);
             }
         }
         return gson.fromJson("{}",Object.class);
@@ -85,14 +54,9 @@ public class FakeDataController {
     public Object postFakeData(@PathVariable("group") String group, @PathVariable("id") String id){
         Gson gson = new Gson();
         if(Objects.nonNull(group) && Objects.nonNull(id)){
-            String resourcePath = buildPath(group,id);
-            if(Objects.nonNull(resourcePath)){
-                try{
-                    String content = readFileToString(resourcePath);
-                    return gson.fromJson(content,Object.class);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
+            String content = fakeDataService.getData(group,id);
+            if(Objects.nonNull(content)){
+                return gson.fromJson(content,Object.class);
             }
         }
         return gson.fromJson("{}",Object.class);
@@ -102,14 +66,9 @@ public class FakeDataController {
     public Object postSampleData(@RequestParam("group") String group, @RequestParam("id") String id){
         Gson gson = new Gson();
         if(Objects.nonNull(group) && Objects.nonNull(id)){
-            String resourcePath = buildPath(group,id);
-            if(Objects.nonNull(resourcePath)){
-                try{
-                    String content = readFileToString(resourcePath);
-                    return gson.fromJson(content,Object.class);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
+            String content = fakeDataService.getData(group,id);
+            if(Objects.nonNull(content)){
+                return gson.fromJson(content,Object.class);
             }
         }
         return gson.fromJson("{}",Object.class);
@@ -117,52 +76,11 @@ public class FakeDataController {
 
     @PostMapping("/add")
     public Object createSampleData(@RequestParam String group, @RequestParam String name, @RequestBody Object data){
-        String content = "Create Data Fail";
+        Object content = "Create Data Fail";
         if(Objects.nonNull(group) && Objects.nonNull(name)){
-            if(!this.groupExists(group)){
-                if(!group.isBlank()){
-                    fakeDataService.createDir(group);
-                }else {
-                    return "";
-                }
-            }
-            String filePath = fakeDataService.getDataPath()+group+"/"+name;
-            if(Objects.nonNull(data)){
-                content = data.toString();
-            }
-            this.writeContent(filePath,content);
+            fakeDataService.addData(group,name,data);
+            content = data;
         }
         return content;
-    }
-
-    private void writeContent(String filePath, String Content){
-        try {
-            File targetFile = new File(filePath);
-            if(!targetFile.exists()){
-                targetFile.createNewFile();
-            }
-            FileWriter myWriter = new FileWriter(targetFile);
-            myWriter.write(Content);
-            myWriter.close();
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-    }
-
-    private boolean groupExists(String group) {
-        boolean exists = false;
-        if(Objects.nonNull(group) && !group.isBlank()){
-            String dataPath = fakeDataService.getDataPath();
-            File fileData = new File(dataPath);
-            if(!fileData.exists()){
-                fileData.mkdirs();
-            }
-            String groupPath = fakeDataService.getDataPath()+group;
-
-            File groupDir = new File(groupPath);
-            exists = groupDir.exists();
-        }
-        return exists;
     }
 }

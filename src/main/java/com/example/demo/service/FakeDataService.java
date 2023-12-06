@@ -3,7 +3,7 @@ package com.example.demo.service;
 import java.util.List;
 
 public interface FakeDataService {
-    void createDir(String path);
+    String getData(String group, String name);
 
-    String getDataPath();
+    void addData(String group, String name, Object data);
 }

@@ -9,28 +9,44 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class FakeDataServiceImpl implements FakeDataService {
+    Map<String, Map<String, String>> dataStore;
+
+    public FakeDataServiceImpl(){
+        this.dataStore = new HashMap<>();
+    }
+
 
     @Override
-    public void createDir(String group) {
-        boolean success = false;
-        if(Objects.nonNull(group)){
-            String path = this.getDataPath()+group;
-            File groupDir = new File(path);
-            if (!groupDir.exists()) {
-                success = groupDir.mkdirs();
+    public String getData(String group, String name) {
+        String data =null;
+        if(Objects.isNull(this.dataStore)){
+            this.dataStore = new HashMap<>();
+        }
+        if(dataStore.containsKey(group)){
+            Map<String, String> groupMap = dataStore.get(group);
+            if(Objects.nonNull(groupMap)){
+                data = groupMap.get(name);
             }
         }
+        return data;
     }
 
     @Override
-    public String getDataPath() {
-        return getClass().getClassLoader().getResource(".").getPath() + "fake/data/";
+    public void addData(String group, String name, Object data) {
+        if(Objects.nonNull(group) && !group.isBlank() && Objects.nonNull(name) && !name.isBlank() && Objects.nonNull(data)){
+            if(Objects.isNull(this.dataStore)){
+                this.dataStore = new HashMap<>();
+            }
+            if(!this.dataStore.containsKey(group)){
+                this.dataStore.put(group, new HashMap<>());
+            }
+            String content = data.toString();
+            this.dataStore.get(group).put(name,content);
+        }
+
     }
 }

@@ -32,15 +32,10 @@ public class FakeDataController {
     public Object getFakeData(@PathVariable("group") String group, @PathVariable("id") String id){
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         if(Objects.nonNull(group) && Objects.nonNull(id)){
-            String content = fakeDataService.getData(group,id);
+            Object content = fakeDataService.getData(group,id);
             if(Objects.nonNull(content)){
-                try{
-                    JsonReader reader = new JsonReader(new StringReader(content));
-                    reader.setLenient(true);
-                    return gson.fromJson(reader,Object.class);
-                }catch(Exception e){
+
                     return  content;
-                }
             }
         }
         return gson.fromJson("{}",Object.class);
@@ -50,9 +45,9 @@ public class FakeDataController {
     public Object getSampleData(@RequestParam("group") String group, @RequestParam("id") String id){
         Gson gson = new Gson();
         if(Objects.nonNull(group) && Objects.nonNull(id)){
-            String content = fakeDataService.getData(group,id);
+            Object content = fakeDataService.getData(group,id);
             if(Objects.nonNull(content)){
-                return gson.fromJson(content,Object.class);
+                return  content;
             }
         }
         return gson.fromJson("{}",Object.class);
@@ -62,9 +57,9 @@ public class FakeDataController {
     public Object postFakeData(@PathVariable("group") String group, @PathVariable("id") String id){
         Gson gson = new Gson();
         if(Objects.nonNull(group) && Objects.nonNull(id)){
-            String content = fakeDataService.getData(group,id);
+            Object content = fakeDataService.getData(group,id);
             if(Objects.nonNull(content)){
-                return gson.fromJson(content,Object.class);
+                return  content;
             }
         }
         return gson.fromJson("{}",Object.class);
@@ -74,9 +69,9 @@ public class FakeDataController {
     public Object postSampleData(@RequestParam("group") String group, @RequestParam("id") String id){
         Gson gson = new Gson();
         if(Objects.nonNull(group) && Objects.nonNull(id)){
-            String content = fakeDataService.getData(group,id);
+            Object content = fakeDataService.getData(group,id);
             if(Objects.nonNull(content)){
-                return gson.fromJson(content,Object.class);
+                return  content;
             }
         }
         return gson.fromJson("{}",Object.class);

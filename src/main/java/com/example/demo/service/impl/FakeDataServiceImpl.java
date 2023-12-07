@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class FakeDataServiceImpl implements FakeDataService {
-    static Map<String, Map<String, String>> dataStore;
+    static Map<String, Map<String, Object>> dataStore;
 
     public FakeDataServiceImpl(){
         if(Objects.isNull(FakeDataServiceImpl.dataStore)) {
@@ -49,13 +49,7 @@ public class FakeDataServiceImpl implements FakeDataService {
             if(!FakeDataServiceImpl.dataStore.containsKey(group)){
                 FakeDataServiceImpl.dataStore.put(group, new HashMap<>());
             }
-            String content = "";
-            try{
-                content = gson.toJson(data);
-            }catch(Exception e){
-                content = data.toString();
-            }
-            FakeDataServiceImpl.dataStore.get(group).put(name,content);
+            FakeDataServiceImpl.dataStore.get(group).put(name,data);
         }
 
     }

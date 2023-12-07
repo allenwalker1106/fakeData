@@ -25,13 +25,13 @@ public class FakeDataServiceImpl implements FakeDataService {
 
 
     @Override
-    public String getData(String group, String name) {
-        String data =null;
+    public Object getData(String group, String name) {
+        Object data =null;
         if(Objects.isNull(FakeDataServiceImpl.dataStore)){
             FakeDataServiceImpl.dataStore = new ConcurrentHashMap<>();
         }
         if(FakeDataServiceImpl.dataStore.containsKey(group)){
-            Map<String, String> groupMap = FakeDataServiceImpl.dataStore.get(group);
+            Map<String, Object> groupMap = FakeDataServiceImpl.dataStore.get(group);
             if(Objects.nonNull(groupMap)){
                 data = groupMap.get(name);
             }

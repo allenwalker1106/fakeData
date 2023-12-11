@@ -3,10 +3,16 @@ package com.example.demo.service.impl;
 import com.example.demo.dto.DataDTO;
 import com.example.demo.service.FireBaseService;
 import com.google.api.core.ApiFuture;
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.*;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -15,7 +21,24 @@ import java.util.Objects;
 public class FireBaseServiceImpl implements FireBaseService {
     @Override
     public Firestore getClient() {
-        return FirestoreClient.getFirestore();
+        try{
+
+            File firebaseKey = ResourceUtils.getFile("classpath:firebasekey.json");
+            FileInputStream serviceAccount = new FileInputStream(firebaseKey);
+
+
+            FirebaseOptions options = new FirebaseOptions.Builder()
+
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .build();
+
+
+            FirebaseApp.initializeApp(options);
+            return FirestoreClient.getFirestore();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override

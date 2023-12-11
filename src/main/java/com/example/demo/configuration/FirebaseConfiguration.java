@@ -26,21 +26,8 @@ import java.util.concurrent.ExecutionException;
 
 @Configuration
 public class FirebaseConfiguration {
-
-
-
     FirebaseConfiguration() throws IOException, ExecutionException, InterruptedException {
-        File firebaseKey = ResourceUtils.getFile("classpath:firebasekey.json");
-        FileInputStream serviceAccount = new FileInputStream(firebaseKey);
 
-
-        FirebaseOptions options = new FirebaseOptions.Builder()
-
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .build();
-
-
-        FirebaseApp.initializeApp(options);
 
     }
 }

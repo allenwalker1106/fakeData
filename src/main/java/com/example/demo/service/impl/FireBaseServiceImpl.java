@@ -59,9 +59,6 @@ public class FireBaseServiceImpl implements FireBaseService {
         if(Objects.nonNull(documentRef)){
 
             ApiFuture<DocumentSnapshot> documentSnapShot = documentRef.get();
-            while(!documentSnapShot.isDone()){
-
-            }
             try{
                 DocumentSnapshot documentData = documentSnapShot.get();
                 Map<String, Object> dataMap = documentData.getData();

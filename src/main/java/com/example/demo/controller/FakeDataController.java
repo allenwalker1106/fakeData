@@ -1,9 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.service.FakeDataService;
+import com.example.demo.service.FireBaseService;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonReader;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -16,9 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,14 +25,16 @@ public class FakeDataController {
     @Autowired
     private FakeDataService fakeDataService;
 
+    @Autowired
+    private FireBaseService firebaseService;
+
     @GetMapping("/data/{group}/{id}")
     public Object getFakeData(@PathVariable("group") String group, @PathVariable("id") String id){
-        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        Gson gson = new Gson();
         if(Objects.nonNull(group) && Objects.nonNull(id)){
             Object content = fakeDataService.getData(group,id);
             if(Objects.nonNull(content)){
-
-                    return  content;
+                return content;
             }
         }
         return gson.fromJson("{}",Object.class);
@@ -47,7 +46,7 @@ public class FakeDataController {
         if(Objects.nonNull(group) && Objects.nonNull(id)){
             Object content = fakeDataService.getData(group,id);
             if(Objects.nonNull(content)){
-                return  content;
+                return content;
             }
         }
         return gson.fromJson("{}",Object.class);
@@ -59,7 +58,7 @@ public class FakeDataController {
         if(Objects.nonNull(group) && Objects.nonNull(id)){
             Object content = fakeDataService.getData(group,id);
             if(Objects.nonNull(content)){
-                return  content;
+                return content;
             }
         }
         return gson.fromJson("{}",Object.class);
@@ -71,7 +70,7 @@ public class FakeDataController {
         if(Objects.nonNull(group) && Objects.nonNull(id)){
             Object content = fakeDataService.getData(group,id);
             if(Objects.nonNull(content)){
-                return  content;
+                return content;
             }
         }
         return gson.fromJson("{}",Object.class);

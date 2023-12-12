@@ -22,27 +22,30 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Configuration
 public class FirebaseConfiguration {
-    FirebaseConfiguration() throws IOException, ExecutionException, InterruptedException {
+    FirebaseConfiguration() {
+
+        try{
+            InputStream resourceStream = Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("firebasekey.json");
 
 
-        Resource resource = new ClassPathResource("firebasekey.json");
-        File firebaseKey = resource.getFile();
-        FileInputStream serviceAccount = new FileInputStream(firebaseKey);
+            FirebaseOptions options = new FirebaseOptions.Builder()
+
+                    .setCredentials(GoogleCredentials.fromStream(resourceStream))
+                    .build();
 
 
-        FirebaseOptions options = new FirebaseOptions.Builder()
-
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .build();
-
-
-        FirebaseApp.initializeApp(options);
+            FirebaseApp.initializeApp(options);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
     }
 }
